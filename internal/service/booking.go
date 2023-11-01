@@ -10,12 +10,14 @@ import (
 type serviceBooking struct {
 	chairRepository domain.ChairRepository
 	userRepository  domain.UserRepository
+	userService     domain.UserService
 }
 
-func NewBooking(chairRepository domain.ChairRepository, userRepository domain.UserRepository) domain.BookingService {
+func NewBooking(chairRepository domain.ChairRepository, userRepository domain.UserRepository, userService domain.UserService) domain.BookingService {
 	return &serviceBooking{
 		chairRepository: chairRepository,
 		userRepository:  userRepository,
+		userService:     userService,
 	}
 }
 
@@ -34,6 +36,7 @@ func (s serviceBooking) GetBookingChairs(ctx context.Context) dto.Response {
 	for _, v := range chairs {
 		resChairs = append(resChairs, dto.ResChair{
 			Id:        v.Id,
+			CodeRef:   v.CodeRef,
 			IsBook:    v.IsBook,
 			UserBook:  v.UserBook,
 			UserPhone: v.UserPhone,
@@ -65,29 +68,21 @@ func (s serviceBooking) SaveBookingChair(ctx context.Context, chair dto.ReqChair
 		}
 	}
 
-	saveChair := domain.Chair{
-		Id:        chair.Id,
-		IsBook:    1,
-		UserBook:  chair.UserBook,
-		UserPhone: chair.UserPhone,
-		Pay:       1,
-	}
+	valChair.IsBook = 1
+	valChair.UserBook = chair.UserBook
+	valChair.UserPhone = chair.UserPhone
+	valChair.Pay = 1
 
-	saveUser := domain.User{
+	var reqUser = dto.ReqUser{
 		Name:  chair.UserBook,
 		Phone: chair.UserPhone,
 	}
-	valUser, _ := s.userRepository.FindByPhone(ctx, saveUser.Phone)
 
-	if valUser != (domain.User{}) {
-		return dto.Response{
-			Code:    "401",
-			Massage: "user has been booking",
-		}
+	if res := s.userService.StoreUser(ctx, reqUser); res != (dto.Response{}) {
+		return res
 	}
-	_ = s.userRepository.Insert(ctx, &saveUser)
 
-	err = s.chairRepository.UpdateChair(ctx, &saveChair)
+	err = s.chairRepository.Update(ctx, &valChair)
 	if err != nil {
 		return dto.Response{
 			Code:    "400",

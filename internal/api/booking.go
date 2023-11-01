@@ -8,12 +8,12 @@ import (
 	"github.com/khairulharu/bookingapi/dto"
 )
 
-type bookingApi struct {
+type apiBooking struct {
 	bookingservice domain.BookingService
 }
 
 func NewBooking(app *fiber.App, bookingService domain.BookingService) {
-	h := bookingApi{
+	h := apiBooking{
 		bookingservice: bookingService,
 	}
 
@@ -21,12 +21,12 @@ func NewBooking(app *fiber.App, bookingService domain.BookingService) {
 	app.Post("/booking", h.StoreBooking)
 }
 
-func (b bookingApi) ShowAllChairs(ctx *fiber.Ctx) error {
+func (b apiBooking) ShowAllChairs(ctx *fiber.Ctx) error {
 	res := b.bookingservice.GetBookingChairs(ctx.Context())
 	return ctx.Status(200).JSON(res)
 }
 
-func (b bookingApi) StoreBooking(ctx *fiber.Ctx) error {
+func (b apiBooking) StoreBooking(ctx *fiber.Ctx) error {
 	var reqChair dto.ReqChair
 	idString := ctx.Query("id")
 	id, _ := strconv.Atoi(idString)

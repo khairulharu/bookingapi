@@ -17,6 +17,11 @@ func NewChair(db *gorm.DB) domain.ChairRepository {
 	}
 }
 
+func (r repositoryChair) Insert(ctx context.Context, chair *[]domain.Chair, value int) error {
+	err := r.db.Debug().WithContext(ctx).Table("chairs").CreateInBatches(chair, value).Error
+	return err
+}
+
 func (r repositoryChair) GetChairs(ctx context.Context) (chairs []domain.Chair, err error) {
 	err = r.db.Debug().WithContext(ctx).Table("chairs").Order("id").Find(&chairs).Error
 	return
@@ -27,7 +32,12 @@ func (r repositoryChair) GetChairByID(ctx context.Context, id int64) (chair doma
 	return
 }
 
-func (r repositoryChair) UpdateChair(ctx context.Context, chair *domain.Chair) error {
+func (r repositoryChair) Update(ctx context.Context, chair *domain.Chair) error {
 	err := r.db.Debug().WithContext(ctx).Table("chairs").Save(&chair).Error
+	return err
+}
+
+func (r repositoryChair) Delete(ctx context.Context, chairs *[]domain.Chair) error {
+	err := r.db.Debug().WithContext(ctx).Table("chairs").Delete(*chairs).Error
 	return err
 }

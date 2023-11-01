@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/khairulharu/bookingapi/internal/api"
 	"github.com/khairulharu/bookingapi/internal/component"
@@ -12,15 +13,21 @@ import (
 
 func main() {
 	cnf := config.Get()
+
 	dbConnection := component.GetDatabase(cnf)
+
 	userRepository := repository.NewUser(dbConnection)
 	chairRepository := repository.NewChair(dbConnection)
 
-	bookingService := service.NewBooking(chairRepository, userRepository)
+	userService := service.NewUser(userRepository)
+	bookingService := service.NewBooking(chairRepository, userRepository, userService)
+	chairService := service.NewChair(chairRepository)
 
 	app := fiber.New()
+	app.Use(cors.New())
 	app.Use(logger.New())
 
 	api.NewBooking(app, bookingService)
+	api.NewChair(app, chairService)
 	app.Listen(cnf.SRV.Host + ":" + cnf.SRV.Port)
 }
