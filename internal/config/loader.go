@@ -2,7 +2,6 @@ package config
 
 import (
 	"log"
-	"os"
 
 	"github.com/joho/godotenv"
 )
@@ -13,15 +12,15 @@ func Get() *Config {
 	}
 	return &Config{
 		Database{
-			Host: os.Getenv("DB_HOST"),
-			Port: os.Getenv("DB_PORT"),
-			User: os.Getenv("DB_USER"),
-			Pass: os.Getenv("DB_PASS"),
-			Name: os.Getenv("DB_NAME"),
+			Host: "ep-cold-pine-25979554.ap-southeast-1.aws.neon.fl0.io",
+			Port: "5432",
+			User: "fl0user",
+			Pass: "4WDZnMg0TEsq",
+			Name: "booking",
 		},
 		Server{
-			Host: os.Getenv("SRV_HOST"),
-			Port: os.Getenv("PORT"),
+			Host: "",
+			Port: "8080",
 		},
 	}
 }
