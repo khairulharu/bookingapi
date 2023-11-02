@@ -10,7 +10,7 @@ import (
 )
 
 func GetDatabase(cnf *config.Config) *gorm.DB {
-	dsn := fmt.Sprintf("host=%v "+"port=%v "+"user=%v "+"password=%v "+"dbname=%v "+"sslmode=disable",
+	dsn := fmt.Sprintf("host=%v "+"port=%v "+"user=%v "+"password=%v "+"dbname=%v "+"sslmode=enable",
 		cnf.DB.Host, cnf.DB.Port, cnf.DB.User, cnf.DB.Pass, cnf.DB.Name)
 
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
