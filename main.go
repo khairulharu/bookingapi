@@ -29,5 +29,5 @@ func main() {
 
 	api.NewBooking(app, bookingService)
 	api.NewChair(app, chairService)
-	app.Listen(cnf.SRV.Host + ":" + cnf.SRV.Port)
+	app.Listen(":" + cnf.SRV.Port)
 }
