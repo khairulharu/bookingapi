@@ -8,7 +8,7 @@ import (
 )
 
 func Get() *Config {
-	if err := godotenv.Load(); err != nil {
+	if err := godotenv.Load("bookingapi.ev"); err != nil {
 		log.Fatalf("error when load env: %v", err.Error())
 	}
 	return &Config{
