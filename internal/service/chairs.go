@@ -10,9 +10,10 @@ import (
 
 type serviceChair struct {
 	chairRepository domain.ChairRepository
+	userRepository  domain.UserRepository
 }
 
-func NewChair(chairRepository domain.ChairRepository) domain.ChairService {
+func NewChair(chairRepository domain.ChairRepository, userRepository domain.UserRepository) domain.ChairService {
 	return &serviceChair{
 		chairRepository: chairRepository,
 	}
@@ -49,6 +50,14 @@ func (s serviceChair) DeleteChairs(ctx context.Context) dto.Response {
 		return dto.Response{
 			Code:    "401",
 			Massage: "error delete chairs",
+			Error:   err.Error(),
+		}
+	}
+	users, _ := s.userRepository.GetUsers(ctx)
+	if err := s.userRepository.Delete(ctx, &users); err != nil {
+		return dto.Response{
+			Code:    "401",
+			Massage: "error delete users",
 			Error:   err.Error(),
 		}
 	}

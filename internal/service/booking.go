@@ -52,7 +52,7 @@ func (s serviceBooking) GetBookingChairs(ctx context.Context) dto.Response {
 }
 
 func (s serviceBooking) SaveBookingChair(ctx context.Context, chair dto.ReqChair) dto.Response {
-	valChair, err := s.chairRepository.GetChairByID(ctx, chair.Id)
+	valChair, err := s.chairRepository.GetChairByCode(ctx, chair.CodeRef)
 	if err != nil {
 		return dto.Response{
 			Code:    "400",

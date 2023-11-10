@@ -19,6 +19,7 @@ type ChairRepository interface {
 	Insert(ctx context.Context, chair *[]Chair, value int) error
 	GetChairs(ctx context.Context) ([]Chair, error)
 	GetChairByID(ctx context.Context, id int64) (Chair, error)
+	GetChairByCode(ctx context.Context, code string) (Chair, error)
 	Update(ctx context.Context, chair *Chair) error
 	Delete(ctx context.Context, chairs *[]Chair) error
 }

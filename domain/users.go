@@ -14,8 +14,10 @@ type User struct {
 
 type UserRepository interface {
 	Insert(ctx context.Context, user *User) error
+	GetUsers(ctx context.Context) ([]User, error)
 	FindByID(ctx context.Context, id int64) (User, error)
 	FindByPhone(ctx context.Context, phone string) (User, error)
+	Delete(ctx context.Context, users *[]User) error
 }
 
 type UserService interface {

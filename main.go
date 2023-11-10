@@ -21,7 +21,7 @@ func main() {
 
 	userService := service.NewUser(userRepository)
 	bookingService := service.NewBooking(chairRepository, userRepository, userService)
-	chairService := service.NewChair(chairRepository)
+	chairService := service.NewChair(chairRepository, userRepository)
 
 	app := fiber.New()
 	app.Use(cors.New())
@@ -29,5 +29,5 @@ func main() {
 
 	api.NewBooking(app, bookingService)
 	api.NewChair(app, chairService)
-	app.Listen(":" + cnf.SRV.Port)
+	app.Listen(cnf.SRV.Host + ":" + cnf.SRV.Port)
 }

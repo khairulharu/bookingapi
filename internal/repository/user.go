@@ -17,6 +17,10 @@ func NewUser(db *gorm.DB) domain.UserRepository {
 	}
 }
 
+func (r repositoryUser) GetUsers(ctx context.Context) (users []domain.User, err error) {
+	err = r.db.Debug().WithContext(ctx).Table("users").Find(&users).Error
+	return
+}
 func (r repositoryUser) FindByPhone(ctx context.Context, phone string) (user domain.User, err error) {
 	err = r.db.Debug().WithContext(ctx).Table("users").Where("phone=?", phone).First(&user).Error
 	return
@@ -29,5 +33,10 @@ func (r repositoryUser) FindByID(ctx context.Context, id int64) (user domain.Use
 
 func (r repositoryUser) Insert(ctx context.Context, user *domain.User) error {
 	err := r.db.Debug().WithContext(ctx).Table("users").Save(&user).Error
+	return err
+}
+
+func (r repositoryUser) Delete(ctx context.Context, users *[]domain.User) error {
+	err := r.db.Debug().WithContext(ctx).Table("users").Delete(users).Error
 	return err
 }

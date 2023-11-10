@@ -8,7 +8,7 @@ import (
 )
 
 func Get() *Config {
-	if err := godotenv.Load("bookingapi.ev"); err != nil {
+	if err := godotenv.Load(); err != nil {
 		log.Fatalf("error when load env: %v", err.Error())
 	}
 	return &Config{
@@ -20,8 +20,8 @@ func Get() *Config {
 			Name: os.Getenv("DB_NAME"),
 		},
 		Server{
-			Host: os.Getenv("SRV_PORT"),
-			Port: os.Getenv("PORT"),
+			Host: os.Getenv("SRV_HOST"),
+			Port: os.Getenv("SRV_PORT"),
 		},
 	}
 }
