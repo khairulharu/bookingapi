@@ -20,7 +20,7 @@ func Get() *Config {
 			},
 			Server{
 				Host: os.Getenv("SRV_HOST"),
-				Port: os.Getenv("SRV_PORT"),
+				Port: os.Getenv("PORT"),
 			},
 		}
 	}
@@ -35,7 +35,7 @@ func Get() *Config {
 		},
 		Server{
 			Host: os.Getenv("SRV_HOST"),
-			Port: os.Getenv("SRV_PORT"),
+			Port: os.Getenv("PORT"),
 		},
 	}
 
