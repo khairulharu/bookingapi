@@ -16,6 +16,7 @@ type serviceChair struct {
 func NewChair(chairRepository domain.ChairRepository, userRepository domain.UserRepository) domain.ChairService {
 	return &serviceChair{
 		chairRepository: chairRepository,
+		userRepository:  userRepository,
 	}
 }
 
@@ -45,7 +46,14 @@ func (s serviceChair) StoreChairs(ctx context.Context, value int) dto.Response {
 }
 
 func (s serviceChair) DeleteChairs(ctx context.Context) dto.Response {
-	chairs, _ := s.chairRepository.GetChairs(ctx)
+	chairs, err := s.chairRepository.GetChairs(ctx)
+	if err != nil {
+		return dto.Response{
+			Code:    "401",
+			Massage: "chair not found",
+			Error:   err.Error(),
+		}
+	}
 	if err := s.chairRepository.Delete(ctx, &chairs); err != nil {
 		return dto.Response{
 			Code:    "401",
@@ -53,7 +61,14 @@ func (s serviceChair) DeleteChairs(ctx context.Context) dto.Response {
 			Error:   err.Error(),
 		}
 	}
-	users, _ := s.userRepository.GetUsers(ctx)
+	users, err := s.userRepository.GetUsers(ctx)
+	if err != nil {
+		return dto.Response{
+			Code:    "401",
+			Massage: "users not found",
+			Error:   err.Error(),
+		}
+	}
 	if err := s.userRepository.Delete(ctx, &users); err != nil {
 		return dto.Response{
 			Code:    "401",

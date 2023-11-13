@@ -11,6 +11,7 @@ type Database struct {
 	User string
 	Pass string
 	Name string
+	SSL  string
 }
 
 type Server struct {

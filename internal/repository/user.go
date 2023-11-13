@@ -37,6 +37,6 @@ func (r repositoryUser) Insert(ctx context.Context, user *domain.User) error {
 }
 
 func (r repositoryUser) Delete(ctx context.Context, users *[]domain.User) error {
-	err := r.db.Debug().WithContext(ctx).Table("users").Delete(users).Error
+	err := r.db.Debug().WithContext(ctx).Table("users").Delete(*users).Error
 	return err
 }
