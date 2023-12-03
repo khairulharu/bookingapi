@@ -26,7 +26,7 @@ func (s serviceChair) StoreChairs(ctx context.Context, value int) dto.Response {
 	for i := 0; i < value; i++ {
 		chair = append(chair, domain.Chair{
 			IsBook:    0,
-			CodeRef:   util.GenerateRandomString(6),
+			Code:      util.GenerateRandomString(6),
 			UserBook:  "not_booking",
 			UserPhone: "not_booking",
 			Pay:       0,
@@ -40,7 +40,7 @@ func (s serviceChair) StoreChairs(ctx context.Context, value int) dto.Response {
 		}
 	}
 	return dto.Response{
-		Code:    "00",
+		Code:    "200",
 		Massage: "APPROVE",
 	}
 }
@@ -78,7 +78,7 @@ func (s serviceChair) DeleteChairs(ctx context.Context) dto.Response {
 	}
 
 	return dto.Response{
-		Code:    "00",
+		Code:    "200",
 		Massage: "APPROVE",
 	}
 }

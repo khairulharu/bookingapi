@@ -4,6 +4,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/khairulharu/bookingapi/domain"
 	"github.com/khairulharu/bookingapi/dto"
+	"github.com/khairulharu/bookingapi/internal/util"
 )
 
 type apiBooking struct {
@@ -21,7 +22,7 @@ func NewBooking(app *fiber.App, bookingService domain.BookingService) {
 
 func (b apiBooking) ShowAllChairs(ctx *fiber.Ctx) error {
 	res := b.bookingservice.GetBookingChairs(ctx.Context())
-	return ctx.Status(200).JSON(res)
+	return ctx.Status(util.GetHttpCode(res.Code)).JSON(res)
 }
 
 func (b apiBooking) StoreBooking(ctx *fiber.Ctx) error {
@@ -33,5 +34,5 @@ func (b apiBooking) StoreBooking(ctx *fiber.Ctx) error {
 	}
 	reqChair.CodeRef = code
 	res := b.bookingservice.SaveBookingChair(ctx.Context(), reqChair)
-	return ctx.Status(200).JSON(res)
+	return ctx.Status(util.GetHttpCode(res.Code)).JSON(res)
 }

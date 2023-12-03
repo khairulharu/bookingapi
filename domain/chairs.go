@@ -8,7 +8,7 @@ import (
 
 type Chair struct {
 	Id        int64  `db:"id"`
-	CodeRef   string `db:"code_ref"`
+	Code      string `db:"code"`
 	IsBook    int8   `db:"is_book"`
 	UserBook  string `db:"user_book"`
 	UserPhone string `db:"user_phone"`

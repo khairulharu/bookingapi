@@ -33,7 +33,7 @@ func (r repositoryChair) GetChairByID(ctx context.Context, id int64) (chair doma
 }
 
 func (r repositoryChair) GetChairByCode(ctx context.Context, code string) (chair domain.Chair, err error) {
-	err = r.db.Debug().WithContext(ctx).Table("chairs").Where("code_ref=?", code).First(&chair).Error
+	err = r.db.Debug().WithContext(ctx).Table("chairs").Where("code=?", code).First(&chair).Error
 	return
 }
 func (r repositoryChair) Update(ctx context.Context, chair *domain.Chair) error {

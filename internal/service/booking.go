@@ -26,7 +26,7 @@ func (s serviceBooking) GetBookingChairs(ctx context.Context) dto.Response {
 	if err != nil {
 		return dto.Response{
 			Code:    "400",
-			Massage: "error when get chairs",
+			Massage: "INVALID",
 			Error:   err.Error(),
 		}
 	}
@@ -36,7 +36,7 @@ func (s serviceBooking) GetBookingChairs(ctx context.Context) dto.Response {
 	for _, v := range chairs {
 		resChairs = append(resChairs, dto.ResChair{
 			Id:        v.Id,
-			CodeRef:   v.CodeRef,
+			CodeRef:   v.Code,
 			IsBook:    v.IsBook,
 			UserBook:  v.UserBook,
 			UserPhone: v.UserPhone,
@@ -45,7 +45,7 @@ func (s serviceBooking) GetBookingChairs(ctx context.Context) dto.Response {
 	}
 
 	return dto.Response{
-		Code:    "00",
+		Code:    "200",
 		Massage: "APPROVE",
 		Data:    resChairs,
 	}
@@ -56,15 +56,16 @@ func (s serviceBooking) SaveBookingChair(ctx context.Context, chair dto.ReqChair
 	if err != nil {
 		return dto.Response{
 			Code:    "400",
-			Massage: "error chair not found",
-			Error:   err.Error(),
+			Massage: "INVALID",
+			Error:   "erorr chairs is not found",
 		}
 	}
 
 	if valChair.IsBook == 1 {
 		return dto.Response{
 			Code:    "401",
-			Massage: "chair is booking",
+			Massage: "INVALID",
+			Error:   "chairs is booking",
 		}
 	}
 
@@ -86,7 +87,7 @@ func (s serviceBooking) SaveBookingChair(ctx context.Context, chair dto.ReqChair
 	if err != nil {
 		return dto.Response{
 			Code:    "400",
-			Massage: "error",
+			Massage: "INVALID",
 			Error:   err.Error(),
 		}
 	}
