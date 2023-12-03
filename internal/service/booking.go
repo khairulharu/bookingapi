@@ -96,3 +96,27 @@ func (s serviceBooking) SaveBookingChair(ctx context.Context, chair dto.ReqChair
 		Massage: "APPROVE",
 	}
 }
+
+func (s serviceBooking) GetBookingChair(ctx context.Context, id int64) dto.Response {
+	chair, err := s.chairRepository.GetChairByID(ctx, id)
+	if err != nil {
+		return dto.Response{
+			Code:    "404",
+			Massage: "INVALID",
+			Error:   "chair not found",
+		}
+	}
+
+	return dto.Response{
+		Code:    "200",
+		Massage: "APPROVE",
+		Data: dto.ResChair{
+			Id:        chair.Id,
+			CodeRef:   chair.Code,
+			IsBook:    chair.IsBook,
+			UserBook:  chair.UserBook,
+			UserPhone: chair.UserPhone,
+			Pay:       chair.Pay,
+		},
+	}
+}
