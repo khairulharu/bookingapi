@@ -82,3 +82,27 @@ func (s serviceChair) DeleteChairs(ctx context.Context) dto.Response {
 		Massage: "APPROVE",
 	}
 }
+
+func (s serviceChair) SearchChairs(ctx context.Context, req string) dto.Response {
+	chair, err := s.chairRepository.GetChairByCode(ctx, req)
+	if err != nil {
+		return dto.Response{
+			Code:    "400",
+			Massage: "INVALID",
+			Error:   "chairs not found",
+		}
+	}
+
+	return dto.Response{
+		Code:    "200",
+		Massage: "APPROVE",
+		Data: dto.ResChair{
+			Id:        chair.Id,
+			CodeRef:   chair.Code,
+			IsBook:    chair.IsBook,
+			UserBook:  chair.UserBook,
+			UserPhone: chair.UserPhone,
+			Pay:       chair.Pay,
+		},
+	}
+}

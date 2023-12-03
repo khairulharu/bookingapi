@@ -27,4 +27,5 @@ type ChairRepository interface {
 type ChairService interface {
 	StoreChairs(ctx context.Context, value int) dto.Response
 	DeleteChairs(ctx context.Context) dto.Response
+	SearchChairs(ctx context.Context, req string) dto.Response
 }

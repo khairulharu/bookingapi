@@ -1,6 +1,8 @@
 package api
 
 import (
+	"strconv"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/khairulharu/bookingapi/domain"
 	"github.com/khairulharu/bookingapi/dto"
@@ -27,12 +29,13 @@ func (b apiBooking) ShowAllChairs(ctx *fiber.Ctx) error {
 
 func (b apiBooking) StoreBooking(ctx *fiber.Ctx) error {
 	var reqChair dto.ReqChair
-	code := ctx.Query("code")
+	idString := ctx.Query("id")
+	id, _ := strconv.Atoi(idString)
 	err := ctx.BodyParser(&reqChair)
 	if err != nil {
 		return err
 	}
-	reqChair.CodeRef = code
+	reqChair.Id = int64(id)
 	res := b.bookingservice.SaveBookingChair(ctx.Context(), reqChair)
 	return ctx.Status(util.GetHttpCode(res.Code)).JSON(res)
 }

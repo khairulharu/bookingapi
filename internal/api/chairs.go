@@ -19,6 +19,7 @@ func NewChair(app *fiber.App, chairService domain.ChairService) {
 
 	app.Post("/chairs", h.ChairStore)
 	app.Delete("/chairs", h.ChairsDeleting)
+	app.Get("/chair")
 }
 
 func (a apiChair) ChairStore(ctx *fiber.Ctx) error {
@@ -30,5 +31,11 @@ func (a apiChair) ChairStore(ctx *fiber.Ctx) error {
 
 func (a apiChair) ChairsDeleting(ctx *fiber.Ctx) error {
 	res := a.chairService.DeleteChairs(ctx.Context())
+	return ctx.Status(util.GetHttpCode(res.Code)).JSON(res)
+}
+
+func (a apiChair) SearchChair(ctx *fiber.Ctx) error {
+	code := ctx.Query("code")
+	res := a.chairService.SearchChairs(ctx.Context(), code)
 	return ctx.Status(util.GetHttpCode(res.Code)).JSON(res)
 }
