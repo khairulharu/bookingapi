@@ -8,6 +8,8 @@ func GetHttpCode(code string) int {
 		return 400
 	case code == "401":
 		return 400
+	case code == "404":
+		return 404
 	default:
 		return 500
 	}
