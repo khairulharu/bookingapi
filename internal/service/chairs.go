@@ -10,11 +10,13 @@ import (
 
 type serviceChair struct {
 	chairRepository domain.ChairRepository
+	userRepository  domain.UserRepository
 }
 
-func NewChair(chairRepository domain.ChairRepository) domain.ChairService {
+func NewChair(chairRepository domain.ChairRepository, userRepository domain.UserRepository) domain.ChairService {
 	return &serviceChair{
 		chairRepository: chairRepository,
+		userRepository:  userRepository,
 	}
 }
 
@@ -24,7 +26,7 @@ func (s serviceChair) StoreChairs(ctx context.Context, value int) dto.Response {
 	for i := 0; i < value; i++ {
 		chair = append(chair, domain.Chair{
 			IsBook:    0,
-			CodeRef:   util.GenerateRandomString(6),
+			Code:      util.GenerateRandomString(6),
 			UserBook:  "not_booking",
 			UserPhone: "not_booking",
 			Pay:       0,
@@ -38,13 +40,20 @@ func (s serviceChair) StoreChairs(ctx context.Context, value int) dto.Response {
 		}
 	}
 	return dto.Response{
-		Code:    "00",
+		Code:    "200",
 		Massage: "APPROVE",
 	}
 }
 
 func (s serviceChair) DeleteChairs(ctx context.Context) dto.Response {
-	chairs, _ := s.chairRepository.GetChairs(ctx)
+	chairs, err := s.chairRepository.GetChairs(ctx)
+	if err != nil {
+		return dto.Response{
+			Code:    "401",
+			Massage: "chair not found",
+			Error:   err.Error(),
+		}
+	}
 	if err := s.chairRepository.Delete(ctx, &chairs); err != nil {
 		return dto.Response{
 			Code:    "401",
@@ -52,9 +61,48 @@ func (s serviceChair) DeleteChairs(ctx context.Context) dto.Response {
 			Error:   err.Error(),
 		}
 	}
+	users, err := s.userRepository.GetUsers(ctx)
+	if err != nil {
+		return dto.Response{
+			Code:    "401",
+			Massage: "users not found",
+			Error:   err.Error(),
+		}
+	}
+	if err := s.userRepository.Delete(ctx, &users); err != nil {
+		return dto.Response{
+			Code:    "401",
+			Massage: "error delete users",
+			Error:   err.Error(),
+		}
+	}
 
 	return dto.Response{
-		Code:    "00",
+		Code:    "200",
 		Massage: "APPROVE",
+	}
+}
+
+func (s serviceChair) SearchChairs(ctx context.Context, req string) dto.Response {
+	chair, err := s.chairRepository.GetChairByCode(ctx, req)
+	if err != nil {
+		return dto.Response{
+			Code:    "400",
+			Massage: "INVALID",
+			Error:   "chairs not found",
+		}
+	}
+
+	return dto.Response{
+		Code:    "200",
+		Massage: "APPROVE",
+		Data: dto.ResChair{
+			Id:        chair.Id,
+			CodeRef:   chair.Code,
+			IsBook:    chair.IsBook,
+			UserBook:  chair.UserBook,
+			UserPhone: chair.UserPhone,
+			Pay:       chair.Pay,
+		},
 	}
 }

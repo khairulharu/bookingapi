@@ -6,6 +6,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/khairulharu/bookingapi/domain"
 	"github.com/khairulharu/bookingapi/dto"
+	"github.com/khairulharu/bookingapi/internal/util"
 )
 
 type apiBooking struct {
@@ -19,11 +20,12 @@ func NewBooking(app *fiber.App, bookingService domain.BookingService) {
 
 	app.Get("/booking", h.ShowAllChairs)
 	app.Post("/booking", h.StoreBooking)
+	app.Get("/booking/chair/", h.GetBookingChair)
 }
 
 func (b apiBooking) ShowAllChairs(ctx *fiber.Ctx) error {
 	res := b.bookingservice.GetBookingChairs(ctx.Context())
-	return ctx.Status(200).JSON(res)
+	return ctx.Status(util.GetHttpCode(res.Code)).JSON(res)
 }
 
 func (b apiBooking) StoreBooking(ctx *fiber.Ctx) error {
@@ -36,5 +38,12 @@ func (b apiBooking) StoreBooking(ctx *fiber.Ctx) error {
 	}
 	reqChair.Id = int64(id)
 	res := b.bookingservice.SaveBookingChair(ctx.Context(), reqChair)
-	return ctx.Status(200).JSON(res)
+	return ctx.Status(util.GetHttpCode(res.Code)).JSON(res)
+}
+
+func (b apiBooking) GetBookingChair(ctx *fiber.Ctx) error {
+	idString := ctx.Query("id")
+	id, _ := strconv.Atoi(idString)
+	res := b.bookingservice.GetBookingChair(ctx.Context(), int64(id))
+	return ctx.Status(util.GetHttpCode(res.Code)).JSON(res)
 }

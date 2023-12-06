@@ -23,12 +23,21 @@ func (s serviceUser) StoreUser(ctx context.Context, req dto.ReqUser) dto.Respons
 		Name:  req.Name,
 		Phone: req.Phone,
 	}
+
+	if saveUser == (domain.User{}) {
+		return dto.Response{
+			Code:    "401",
+			Massage: "INVALID",
+			Error:   "field fully",
+		}
+	}
 	valUser, _ := s.userRepository.FindByPhone(ctx, saveUser.Phone)
 
 	if valUser != (domain.User{}) {
 		return dto.Response{
 			Code:    "401",
-			Massage: "user has been booking",
+			Massage: "INVALID",
+			Error:   "user only can booking one chair",
 		}
 	}
 	_ = s.userRepository.Insert(ctx, &saveUser)
